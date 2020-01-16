@@ -2,7 +2,7 @@ from pathlib import Path
 import pyinputplus as pyip
 import PyPDF2, os
 
-def executa(paginas_p_arquivo, pdf_reader, contador_paginas, parte, tamanho_maximo, pasta_doc):
+def executa(paginas_p_arquivo, pdf_reader, contador_paginas, nome, parte, tamanho_maximo, pasta_doc):
     pdf_writer = PyPDF2.PdfFileWriter()
     contador_orig = contador_paginas
 
@@ -15,7 +15,7 @@ def executa(paginas_p_arquivo, pdf_reader, contador_paginas, parte, tamanho_maxi
             contador_paginas = -1
             break
 
-    str_nome = 'parte' + str(parte) + '.pdf'
+    str_nome = f'{nome} - parte{parte}.pdf'
     end_destino = pasta_doc / str_nome
 
     pdf_file_out = open(end_destino, 'wb')
@@ -24,13 +24,13 @@ def executa(paginas_p_arquivo, pdf_reader, contador_paginas, parte, tamanho_maxi
     if os.stat(pdf_file_out.name).st_size > tamanho_maximo:
         pdf_file_out.close()
         paginas_p_arquivo -= 1
-        contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_orig, parte, tamanho_maximo, pasta_doc)
+        contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_orig, nome, parte, tamanho_maximo, pasta_doc)
 
     pdf_file_out.close()
     return contador_paginas
 
-def divide_pdf(arquivo, tamanho_maximo, pasta_doc):
-    pdf_file_in = open(arquivo,'rb')
+def divide_pdf(pasta_arquivos, arquivo, tamanho_maximo, pasta_doc):
+    pdf_file_in = open(pasta_arquivos / arquivo, 'rb')
     pdf_reader = PyPDF2.PdfFileReader(pdf_file_in)
 
     tamanho_maximo *= 1000 * 1000
@@ -41,7 +41,7 @@ def divide_pdf(arquivo, tamanho_maximo, pasta_doc):
 
     parte = 0
     while contador_paginas >= 0:
-        contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_paginas, parte, tamanho_maximo, pasta_doc)
+        contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_paginas, arquivo, parte, tamanho_maximo, pasta_doc)
         parte += 1
 
     pdf_file_in.close()
@@ -55,7 +55,7 @@ def control(tam):
             sub_pasta = Path(arquivo[:-4])
             pasta_doc = pasta_arquivos / sub_pasta
             Path(pasta_doc).mkdir()
-            divide_pdf(pasta_arquivos / arquivo, tam, pasta_doc)
+            divide_pdf(pasta_arquivos, arquivo, tam, pasta_doc)
 
 tam = pyip.inputInt(prompt='Tamanho máximo de cada arquivo (em MB): ')
 control(tam)
