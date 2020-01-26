@@ -23,7 +23,6 @@ def executa(paginas_p_arquivo, pdf_reader, contador_paginas, nome, parte, tamanh
     pdf_file_out.close()
 
     if os.stat(pdf_file_out.name).st_size > tamanho_maximo:
-        #paginas_p_arquivo -= 1
         paginas_p_arquivo = math.floor(paginas_p_arquivo - 0.05 * paginas_p_arquivo)
         contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_orig, nome, parte, tamanho_maximo, pasta_doc)
 
@@ -47,7 +46,6 @@ def divide_pdf(pasta_arquivos, arquivo, tamanho_maximo, pasta_doc):
     pdf_file_in.close()
 
 def control(tam):
-    #pasta_arquivos = Path(os.path.abspath('.\\docs'))
     pasta_arquivos = Path(os.path.abspath('./docs'))
     lista_arquivos = os.listdir(pasta_arquivos)
 
