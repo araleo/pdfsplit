@@ -1,6 +1,6 @@
 from pathlib import Path
 import pyinputplus as pyip
-import PyPDF2, os
+import math, PyPDF2, os
 
 def executa(paginas_p_arquivo, pdf_reader, contador_paginas, nome, parte, tamanho_maximo, pasta_doc):
     pdf_writer = PyPDF2.PdfFileWriter()
@@ -20,13 +20,13 @@ def executa(paginas_p_arquivo, pdf_reader, contador_paginas, nome, parte, tamanh
 
     pdf_file_out = open(end_destino, 'wb')
     pdf_writer.write(pdf_file_out)
+    pdf_file_out.close()
 
     if os.stat(pdf_file_out.name).st_size > tamanho_maximo:
-        pdf_file_out.close()
-        paginas_p_arquivo -= 1
+        #paginas_p_arquivo -= 1
+        paginas_p_arquivo = math.floor(paginas_p_arquivo - 0.05 * paginas_p_arquivo)
         contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_orig, nome, parte, tamanho_maximo, pasta_doc)
 
-    pdf_file_out.close()
     return contador_paginas
 
 def divide_pdf(pasta_arquivos, arquivo, tamanho_maximo, pasta_doc):
