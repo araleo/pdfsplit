@@ -9,10 +9,10 @@ splitPDF é um programa que divide arquivos pdf.
 Para rodar a versão GUI: (i) baixar e executar o executável windows ou (ii)baixar os três arquivos.py e executar "python3 pdf_gui.py"
 
 Para rodar a versão CLI: é possível baixar apenas splitpdf.py e mensagens.py.
-`<addr>`Uso: python3 splidpdf.py entrada pasta modo
-`<addr>`entrada: número inteiro maior que zero para o tamanho máximo ou quantidade de partes.
-`<addr>`pasta: arquivo .pdf ou diretório onde estão os arquivos para dividir.
-`<addr>`modo: tamanho ou partes
+<addr>Uso: python3 splidpdf.py entrada pasta modo
+<addr>entrada: número inteiro maior que zero para o tamanho máximo ou quantidade de partes.
+<addr>pasta: arquivo .pdf ou diretório onde estão os arquivos para dividir.
+<addr>modo: tamanho ou partes
 
 
 ![gui](/imagens/imgui.jpg)
