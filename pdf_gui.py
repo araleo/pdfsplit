@@ -44,7 +44,7 @@ class Pdf(Frame):
             self.popup("Erro", "Por favor insira um número inteiro maior que zero.")
             return
         else:
-            if tam == 0:
+            if tam <= 0:
                 self.popup("Erro", "Por favor digite um número inteiro maior que zero.")
                 return
 

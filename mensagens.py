@@ -20,7 +20,7 @@ Confirme se selecionou a pasta ou arquivo correto.
 Digite o tamanho máximo que os arquivos de saída poderão ter, ou a quantidade de partes que deseja.
 Somente são aceitos números inteiros.
 Se você digitar algo que não seja um número, uma mensagem de erro irá aparecer.
-Mas, se digitar um número real, ele será automaticamente convertido para o inteiro anterior mais próximo.
+Mas, se digitar um número real, ele será automaticamente convertido para o inteiro anterior.
 
 Clique no botão "Dividir" e aguarde até que a mensagem "Sucesso" apareça na barra abaixo do botão.
 
