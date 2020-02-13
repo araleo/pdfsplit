@@ -55,7 +55,7 @@ def executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_paginas, nome, p
 
     if os.stat(pdf_file_out.name).st_size > tamanho_maximo:
         paginas_p_arquivo = math.floor(paginas_p_arquivo - 0.05 * paginas_p_arquivo)
-        contador_paginas = executa(paginas_p_arquivo, pdf_reader, contador_orig, nome, parte, tamanho_maximo, pasta_doc)
+        contador_paginas = executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_orig, nome, parte, tamanho_maximo, pasta_doc)
 
     return contador_paginas
 
