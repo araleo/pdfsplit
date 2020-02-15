@@ -29,7 +29,7 @@ https://github.com/araleo/pdfsplit
 
 
 TEXTO_ARGV = """
-Uso: python3 splidpdf.py entrada pasta modo
+Uso: python3 splitpdf.py entrada pasta modo
 entrada: número inteiro maior que zero para o tamanho máximo ou quantidade de partes.
 pasta: arquivo .pdf ou diretório onde estão os arquivos para dividir.
 modo: tamanho ou partes

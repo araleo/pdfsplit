@@ -29,6 +29,7 @@ def divide_em_partes(pasta_arquivos, arquivo, numero_partes, pasta_doc):
         end_destino = pasta_doc / str_nome
 
         pdf_file_out = open(end_destino, 'wb')
+        pdf_writer.removeLinks()
         pdf_writer.write(pdf_file_out)
         pdf_file_out.close()
 
@@ -50,6 +51,7 @@ def executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_paginas, nome, p
     end_destino = pasta_doc / str_nome
 
     pdf_file_out = open(end_destino, 'wb')
+    pdf_writer.removeLinks()
     pdf_writer.write(pdf_file_out)
     pdf_file_out.close()
 
@@ -66,7 +68,6 @@ def divide_por_tamanho(pasta_arquivos, arquivo, tamanho_maximo, pasta_doc):
 
     tamanho_maximo *= 1000 * 1000
     tamanho_entrada = os.stat(pdf_file_in.name).st_size
-
     paginas_p_arquivo = tamanho_maximo // (tamanho_entrada // pdf_reader.numPages) - 1
     contador_paginas = 0
 
@@ -104,7 +105,6 @@ def control(entrada, dir, modo):
 
 
 def main():
-
     # verifica a quantidade de argumentos
     if len(sys.argv) != 4:
         print(TEXTO_ARGV)
@@ -127,7 +127,6 @@ def main():
         print(TEXTO_ARGV)
         exit()
 
-
     # verifica o terceiro argumento
     modo = sys.argv[3]
     if modo != "tamanho" and modo != "partes":
@@ -139,6 +138,7 @@ def main():
         control(entrada, caminho, modo)
     except FileExistsError:
         print("Já existe uma pasta com o nome de algum dos arquivos. Por favor renomeie a pasta ou o arquivo.")
+
 
 if __name__ == "__main__":
     main()
