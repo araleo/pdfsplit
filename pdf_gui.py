@@ -1,3 +1,4 @@
+from errors import EmptyFileError, TooFewPagesError
 from mensagens import *
 from splitpdf import *
 from tkinter import *
@@ -37,29 +38,34 @@ class Pdf(Frame):
 
 
     def divide_pdf(self):
-        tam = self.define_tamanho_maximo()
+
         try:
-            tam = int(tam)
+            tam = self.define_tamanho_maximo()
         except ValueError:
             self.popup("Erro", "Por favor insira um número inteiro maior que zero.")
             return
-        else:
-            if tam <= 0:
-                self.popup("Erro", "Por favor digite um número inteiro maior que zero.")
-                return
 
+        self.set_status("Carregando...")
         try:
-            self.set_status("Carregando...")
             control(tam, self.caminho, self.funcao_divisao)
-            self.set_status("Sucesso")
         except AttributeError:
             self.popup("Erro", "Por favor escolha um arquivo ou pasta.")
             self.set_status("Escolha um arquivo ou pasta.")
             return
-        except FileExistsError:
-            self.popup("Erro", "Já existe uma pasta com o nome de um dos arquivos selecionados. Renomeie o arquivo ou a pasta")
+        except EmptyFileError:
+            self.popup("Erro", EMPTY_FILE)
             self.set_status("Escolha um arquivo ou pasta.")
             return
+        except FileExistsError:
+            self.popup("Erro", PASTA_JA_EXISTE)
+            self.set_status("Escolha um arquivo ou pasta.")
+            return
+        except TooFewPagesError:
+            self.popup("Erro", TOO_FEW_PAGES)
+            self.set_status("Escolha um arquivo ou pasta.")
+            return
+        else:
+            self.set_status("Sucesso")
 
 
     def define_funcao(self, funcao):
@@ -84,7 +90,10 @@ class Pdf(Frame):
 
 
     def define_tamanho_maximo(self):
-        return self.entrada_input.get()
+        tam = int(self.entrada_input.get())
+        if tam <= 0:
+            raise ValueError
+        return tam
 
 
     def set_status(self, texto):

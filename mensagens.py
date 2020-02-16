@@ -34,3 +34,16 @@ entrada: número inteiro maior que zero para o tamanho máximo ou quantidade de 
 pasta: arquivo .pdf ou diretório onde estão os arquivos para dividir.
 modo: tamanho ou partes
 """
+
+
+TOO_FEW_PAGES = """
+Impossível dividir um dos arquivos. Parece que ele possui menos páginas que o número de partes.
+"""
+
+EMPTY_FILE = """
+Impossível dividir um dos arquivos. Parece que uma das páginas é maior que o tamanho máximo especificado.
+"""
+
+PASTA_JA_EXISTE = """
+Já existe uma pasta com o nome de algum dos arquivos. Por favor renomeie a pasta ou o arquivo.
+"""
