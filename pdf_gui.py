@@ -11,9 +11,9 @@ class Pdf(Frame):
         Frame.__init__(self, parent)
         self.frame = LabelFrame(text="Divisor de PDFs", padx=50, pady=50)
         self.frame.pack()
-        r = StringVar()
         self.funcao_divisao = 'tamanho'
-
+        r = StringVar()
+        
         self.radio_tam = Radiobutton(self.frame, text="Dividir por tamanho", variable=r, value="tamanho", command=lambda: self.define_funcao(r.get()))
         self.radio_partes = Radiobutton(self.frame, text="Dividir por partes", variable=r, value="partes", command=lambda: self.define_funcao(r.get()))
         self.botao_pasta = Button(self.frame, text="Escolha uma pasta", command=self.escolhe_pasta)
@@ -38,7 +38,6 @@ class Pdf(Frame):
 
 
     def divide_pdf(self):
-
         try:
             tam = self.define_tamanho_maximo()
         except ValueError:
