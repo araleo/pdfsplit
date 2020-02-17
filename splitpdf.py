@@ -18,6 +18,7 @@ def verifica_arquivo_vazio(arq):
         f.close()
         os.remove(arq)
         raise EmptyFileError
+    f.close()
 
 
 def executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_paginas, nome, parte, tamanho_maximo, pasta_doc):
@@ -113,17 +114,22 @@ def control(entrada, dir, modo):
         if arquivo.endswith('.pdf'):
             pasta_doc = pasta_arquivos / arquivo[:-4]
             Path(pasta_doc).mkdir()
+
             if modo == 'tamanho':
                 try:
                     divide_por_tamanho(pasta_arquivos, arquivo, entrada, pasta_doc)
                 except EmptyFile:
                     print(EMPTY_FILE)
+                    return 1
             elif modo == 'partes':
                 try:
                     divide_em_partes(pasta_arquivos, arquivo, entrada, pasta_doc)
                 except TooFewPagesError:
                     print(TOO_FEW_PAGES)
+                    return 2
+
             verifica_pasta_vazia(pasta_doc)
+    return 0
 
 
 def main():

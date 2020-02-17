@@ -47,3 +47,5 @@ Impossível dividir um dos arquivos. Parece que uma das páginas é maior que o 
 PASTA_JA_EXISTE = """
 Já existe uma pasta com o nome de algum dos arquivos. Por favor renomeie a pasta ou o arquivo.
 """
+
+ARQ_OU_PASTA = "Escolha um arquivo ou pasta."

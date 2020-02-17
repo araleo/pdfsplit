@@ -1,4 +1,3 @@
-from errors import EmptyFileError, TooFewPagesError
 from mensagens import *
 from splitpdf import *
 from tkinter import *
@@ -13,7 +12,7 @@ class Pdf(Frame):
         self.frame.pack()
         self.funcao_divisao = 'tamanho'
         r = StringVar()
-        
+
         self.radio_tam = Radiobutton(self.frame, text="Dividir por tamanho", variable=r, value="tamanho", command=lambda: self.define_funcao(r.get()))
         self.radio_partes = Radiobutton(self.frame, text="Dividir por partes", variable=r, value="partes", command=lambda: self.define_funcao(r.get()))
         self.botao_pasta = Button(self.frame, text="Escolha uma pasta", command=self.escolhe_pasta)
@@ -46,25 +45,26 @@ class Pdf(Frame):
 
         self.set_status("Carregando...")
         try:
-            control(tam, self.caminho, self.funcao_divisao)
+            c = control(tam, self.caminho, self.funcao_divisao)
         except AttributeError:
-            self.popup("Erro", "Por favor escolha um arquivo ou pasta.")
-            self.set_status("Escolha um arquivo ou pasta.")
-            return
-        except EmptyFileError:
-            self.popup("Erro", EMPTY_FILE)
-            self.set_status("Escolha um arquivo ou pasta.")
+            self.popup("Erro", ARQ_OU_PASTA)
+            self.set_status(ARQ_OU_PASTA)
             return
         except FileExistsError:
             self.popup("Erro", PASTA_JA_EXISTE)
-            self.set_status("Escolha um arquivo ou pasta.")
-            return
-        except TooFewPagesError:
-            self.popup("Erro", TOO_FEW_PAGES)
-            self.set_status("Escolha um arquivo ou pasta.")
+            self.set_status(ARQ_OU_PASTA)
             return
         else:
-            self.set_status("Sucesso")
+            if c == 1: # EmptyFileError
+                self.popup("Erro", EMPTY_FILE)
+                self.set_status(ARQ_OU_PASTA)
+                return
+            elif c == 2: # TooFewPagesError
+                self.popup("Erro", TOO_FEW_PAGES)
+                self.set_status(ARQ_OU_PASTA)
+                return
+            else:
+                self.set_status("Sucesso")
 
 
     def define_funcao(self, funcao):
