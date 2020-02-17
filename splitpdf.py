@@ -120,12 +120,14 @@ def control(entrada, dir, modo):
                     divide_por_tamanho(pasta_arquivos, arquivo, entrada, pasta_doc)
                 except EmptyFile:
                     print(EMPTY_FILE)
+                    verifica_pasta_vazia(pasta_doc)
                     return 1
             elif modo == 'partes':
                 try:
                     divide_em_partes(pasta_arquivos, arquivo, entrada, pasta_doc)
                 except TooFewPagesError:
                     print(TOO_FEW_PAGES)
+                    verifica_pasta_vazia(pasta_doc)
                     return 2
 
             verifica_pasta_vazia(pasta_doc)
