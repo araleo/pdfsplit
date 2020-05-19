@@ -1,24 +1,28 @@
+import math
+import os
+import sys
+
 import pyinputplus as pyip
-import math, PyPDF2, os, sys
+import PyPDF2
+from pathlib import Path
+
 from errors import EmptyFileError, TooFewPagesError
 from mensagens import *
-from pathlib import Path
 
 
 def verifica_pasta_vazia(pasta):
-    lista = os.listdir(pasta)
-    if not lista:
+    arquivos = os.listdir(pasta)
+    if not arquivos:
         os.rmdir(pasta)
 
 
 def verifica_arquivo_vazio(arq):
-    f = open(arq, 'rb')
-    reader = PyPDF2.PdfFileReader(f)
-    if reader.numPages == 0:
-        f.close()
-        os.remove(arq)
-        raise EmptyFileError
-    f.close()
+    with open(arq, 'rb') as f:
+        reader = PyPDF2.PdfFileReader(f)
+        if reader.numPages == 0:
+            f.close()
+            os.remove(arq)
+            raise EmptyFileError
 
 
 def executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_paginas, nome, parte, tamanho_maximo, pasta_doc):
@@ -43,26 +47,40 @@ def executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_paginas, nome, p
 
     if os.stat(pdf_file_out.name).st_size > tamanho_maximo:
         paginas_p_arquivo = math.floor(paginas_p_arquivo * 0.95)
-        contador_paginas = executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_orig, nome, parte, tamanho_maximo, pasta_doc)
+        contador_paginas = executa_por_tamanho(
+            paginas_p_arquivo,
+            pdf_reader,
+            contador_orig,
+            nome,
+            parte,
+            tamanho_maximo,
+            pasta_doc
+        )
 
     return contador_paginas
 
 
 def divide_por_tamanho(pasta_arquivos, arquivo, tamanho_maximo, pasta_doc):
-    pdf_file_in = open(pasta_arquivos / arquivo, 'rb')
-    pdf_reader = PyPDF2.PdfFileReader(pdf_file_in)
+    with open(pasta_arquivos / arquivo, 'rb') as pdf_file_in:
+        pdf_reader = PyPDF2.PdfFileReader(pdf_file_in)
 
-    tamanho_maximo *= 1000 * 1000
-    tamanho_entrada = os.stat(pdf_file_in.name).st_size
-    paginas_p_arquivo = tamanho_maximo // (tamanho_entrada // pdf_reader.numPages) - 1
-    contador_paginas = 0
+        tamanho_maximo *= 1000 * 1000
+        tam_pagina = os.stat(pdf_file_in.name).st_size // pdf_reader.numPages
+        paginas_p_arquivo = tamanho_maximo // tam_pagina - 1
+        contador_paginas = 0
 
-    parte = 1
-    while contador_paginas >= 0:
-        contador_paginas = executa_por_tamanho(paginas_p_arquivo, pdf_reader, contador_paginas, arquivo, parte, tamanho_maximo, pasta_doc)
-        parte += 1
-
-    pdf_file_in.close()
+        parte = 1
+        while contador_paginas >= 0:
+            contador_paginas = executa_por_tamanho(
+                paginas_p_arquivo,
+                pdf_reader,
+                contador_paginas,
+                arquivo,
+                parte,
+                tamanho_maximo,
+                pasta_doc
+            )
+            parte += 1
 
 
 def divide_em_partes(pasta_arquivos, arquivo, numero_partes, pasta_doc):
@@ -117,14 +135,24 @@ def control(entrada, dir, modo):
 
             if modo == 'tamanho':
                 try:
-                    divide_por_tamanho(pasta_arquivos, arquivo, entrada, pasta_doc)
-                except EmptyFile:
+                    divide_por_tamanho(
+                        pasta_arquivos,
+                        arquivo,
+                        entrada,
+                        pasta_doc
+                    )
+                except EmptyFileError:
                     print(EMPTY_FILE)
                     verifica_pasta_vazia(pasta_doc)
                     return 1
             elif modo == 'partes':
                 try:
-                    divide_em_partes(pasta_arquivos, arquivo, entrada, pasta_doc)
+                    divide_em_partes(
+                        pasta_arquivos,
+                        arquivo,
+                        entrada,
+                        pasta_doc
+                    )
                 except TooFewPagesError:
                     print(TOO_FEW_PAGES)
                     verifica_pasta_vazia(pasta_doc)
@@ -140,7 +168,8 @@ def main():
         print(TEXTO_ARGV)
         exit()
 
-    # verifica se o primeiro argumento é um inteiro maior que zero e converte para int
+    # converte o primeiro argumento para tipo inteiro
+    # e verifica se é maior que zero
     try:
         entrada = int(sys.argv[1])
     except ValueError:
@@ -151,7 +180,8 @@ def main():
             print(TEXTO_ARGV)
             exit()
 
-    # verifica se o segundo argumento é um diretório ou arquivo pdf válido
+    # verifica se o segundo argumento é um diretório
+    # ou arquivo pdf válido
     caminho = sys.argv[2]
     if not os.path.exists(Path(os.path.abspath(caminho))):
         print(TEXTO_ARGV)
