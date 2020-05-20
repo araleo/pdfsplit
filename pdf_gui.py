@@ -1,9 +1,11 @@
-from mensagens import *
-from splitpdf import *
+import os
+
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 
+from mensagens import *
+from splitpdf import *
 
 class Pdf(Frame):
 
@@ -103,25 +105,25 @@ class Pdf(Frame):
     def define_funcao(self, funcao):
         self.entrada_texto.destroy()
         if funcao == "tamanho":
-            self.funcao_divisao = 'tamanho'
+            self.funcao_divisao = "tamanho"
             self.entrada_texto = Label(self.frame, text="Tamanho máximo (MB)")
         elif funcao == "partes":
-            self.funcao_divisao = 'partes'
+            self.funcao_divisao = "partes"
             self.entrada_texto = Label(self.frame, text="Número de partes")
         self.entrada_texto.grid(row=2, column=1, pady=10)
 
     def escolhe_pasta(self):
         self.caminho = filedialog.askdirectory(
-            initialdir="./",
+            initialdir=os.getcwd(),
             title="Escolha uma pasta"
         )
         self.set_status(self.caminho)
 
     def escolhe_arquivo(self):
         self.caminho = filedialog.askopenfilename(
-            initialdir="./",
+            initialdir=os.getcwd(),
             title="Escolha um arquivo",
-            filetypes=(('pdf files', '*.pdf'), ('all files', '*.*'))
+            filetypes=(("pdf files", "*.pdf"), ("all files", "*.*"))
         )
         self.set_status(self.caminho)
 
