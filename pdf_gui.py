@@ -4,8 +4,10 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 
+from Errors import EmptyFileError, TooFewPagesError
 from mensagens import *
-from splitpdf import *
+from split import split_infiles
+
 
 class Pdf(Frame):
 
@@ -13,7 +15,7 @@ class Pdf(Frame):
         Frame.__init__(self, parent)
         self.frame = LabelFrame(text="Divisor de PDFs", padx=50, pady=50)
         self.frame.pack()
-        self.funcao_divisao = 'tamanho'
+        self.funcao_divisao = "tamanho"
         r = StringVar()
 
         self.radio_tam = Radiobutton(
@@ -44,7 +46,8 @@ class Pdf(Frame):
         self.entrada_texto = Label(self.frame, text="Tamanho máximo (MB)")
         self.botao_dividir = Button(
             self.frame,
-            text="Dividir",command=self.divide_pdf
+            text="Dividir",
+            command=self.divide_pdf
         )
         self.status = Label(
             self.frame,
@@ -71,17 +74,15 @@ class Pdf(Frame):
 
     def divide_pdf(self):
         try:
-            tam = self.define_tamanho_maximo()
+            sop = self.get_tam_ou_partes()
         except ValueError:
-            self.popup(
-                "Erro",
-                "Por favor insira um número inteiro maior que zero."
-            )
+            self.popup("Erro", "Por favor insira um número inteiro maior que zero.")
             return
 
         self.set_status("Carregando...")
+
         try:
-            c = control(tam, self.caminho, self.funcao_divisao)
+            split_infiles(sop, self.caminho, self.funcao_divisao)
         except AttributeError:
             self.popup("Erro", ARQ_OU_PASTA)
             self.set_status(ARQ_OU_PASTA)
@@ -90,17 +91,16 @@ class Pdf(Frame):
             self.popup("Erro", PASTA_JA_EXISTE)
             self.set_status(ARQ_OU_PASTA)
             return
+        except EmptyFileError:
+            self.popup("Erro", EMPTY_FILE)
+            self.set_status(ARQ_OU_PASTA)
+            return
+        except TooFewPagesError:
+            self.popup("Erro", TOO_FEW_PAGES)
+            self.set_status(ARQ_OU_PASTA)
+            return
         else:
-            if c == 1: # EmptyFileError
-                self.popup("Erro", EMPTY_FILE)
-                self.set_status(ARQ_OU_PASTA)
-                return
-            elif c == 2: # TooFewPagesError
-                self.popup("Erro", TOO_FEW_PAGES)
-                self.set_status(ARQ_OU_PASTA)
-                return
-            else:
-                self.set_status("Sucesso")
+            self.set_status("Sucesso")
 
     def define_funcao(self, funcao):
         self.entrada_texto.destroy()
@@ -127,11 +127,19 @@ class Pdf(Frame):
         )
         self.set_status(self.caminho)
 
-    def define_tamanho_maximo(self):
-        tam = int(self.entrada_input.get())
-        if tam <= 0:
+    def get_tam_ou_partes(self):
+        try:
+            sop = self.set_tam_ou_partes()
+        except ValueError:
             raise ValueError
-        return tam
+        else:
+            return sop
+
+    def set_tam_ou_partes(self):
+        sop = int(self.entrada_input.get())
+        if sop <= 0:
+            raise ValueError
+        return sop
 
     def set_status(self, texto):
         self.status.destroy()
