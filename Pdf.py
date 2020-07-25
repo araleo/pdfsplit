@@ -10,7 +10,7 @@ class Pdf:
         self.reader = PyPDF2.PdfFileReader(file)
         self.pages = self.reader.pages
         self.outpath = outpath
-        self.nome = f"teste"
+        self.nome = os.path.basename(outpath)
 
     def write_outfile(self, writer, name):
         with open(os.path.join(self.outpath, name), "wb") as f:
@@ -33,7 +33,7 @@ class PdfSize(Pdf):
         part = 1
         while True:
             current_pages = self.pages_file
-            name = f"teste{part}.pdf"
+            name = f"{self.nome}-{part}.pdf"
             self.create_file(name)
             filepath = os.path.join(self.outpath, name)
             while not self.check_size(filepath):
@@ -97,7 +97,7 @@ class PdfParts(Pdf):
         for num, page in enumerate(self.pages):
             writer.addPage(page)
             if self.check_for_write(num):
-                writer = self.write_outfile(writer, f"teste{self.set_part(num)}.pdf")
+                writer = self.write_outfile(writer, f"{self.nome}-{self.set_part(num)}.pdf")
 
     def check_for_write(self, num):
         if num == len(self.pages) - 1:
