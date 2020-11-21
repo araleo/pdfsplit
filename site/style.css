@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+.topo {
+  text-align: center;
+}
+
+#link-download {
+  font-size: 24px;
+}
+
+.menu {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.menu a:visited {
+  color: blue;
+}
+
+.menu ul {
+  list-style-type: none;
+}
+
+.menu li {
+  float: left;
+  margin-right: 2em;
+}
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 256px;
+  height: 128px;
+}
+
+img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+dt {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
