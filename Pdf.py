@@ -97,7 +97,8 @@ class PdfParts(Pdf):
         for num, page in enumerate(self.pages):
             writer.addPage(page)
             if self.check_for_write(num):
-                writer = self.write_outfile(writer, f"{self.nome}-{self.set_part(num)}.pdf")
+                # writer = self.write_outfile(writer, f"{self.nome}-{self.set_part(num)}.pdf")
+                writer = self.write_outfile(writer, f"{self.set_part(num)}.pdf")
 
     def check_for_write(self, num):
         if num == len(self.pages) - 1:
